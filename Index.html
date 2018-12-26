@@ -1,0 +1,1051 @@
+<html>
+    <head>    
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </head> 
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <?!= include('Stylesheet'); ?>
+
+    <body onload="onloadFunction()">
+    
+    
+    <input type="button" class="button122" value="Uložiť zmenu" onclick="saveData()"> <!-- nemazat !!!! bugy nepojde skrolovot v popUP --> 
+    
+    
+    <!--====================================================================================
+    Zakladné menu    
+    =====================================================================================-->
+    <div class="tab">
+      <button id="btnTabLogin" class="tablinks1" onclick="openCity1(event, 'tabLogin')" style="display:none;">Prihlásenie</button>
+      <button id="btnTabDatabaza" class="tablinks1" onclick="openCity1(event, 'tabData')" style="display:none;">Databáza</button>
+      <button id="defaultOpen1"  class="tablinks1" onclick="openCity1(event, 'tabCallPage')" style="display:none;">Call-Page</button>
+      <button id="btnTabIK" class="tablinks1" onclick="openCity1(event, 'tabIK')" style="display:none;">IK</button>
+      <button id="btnTabAktivity" class="tablinks1" onclick="openCity1(event, 'tabAktivity')" style="display:none;">Aktivity</button>
+      <button id="btnTabOdkazy" class="tablinks1" onclick="openCity1(event, 'tabOdkazy')" style="display:none;">Odkazy</button>
+      
+      <button id="btnTabFirmy"class="tablinks1" onclick="openCity1(event, 'tabPoSzco')" style="display:none;">Firmy/SZČO</button>
+    </div>    
+    <br><br>    
+    
+    
+    <!--====================================================================================
+    Login Form     
+    =====================================================================================-->
+    <div id='tabLogin' class="tabcontent1">
+      <link href='https://fonts.googleapis.com/css?family=Open+Sans:700,600' rel='stylesheet' type='text/css'>      
+      <form method="post" action="index.html">
+      <div class="box">      
+      <p><input type="text4" id="emailAddress" placeholder="Prihlasovacie meno" class="email"></p>
+      <p><input id="userPassword" type="password" placeholder="Heslo" class="email"/></p>
+      <input id="btnPrilhasit" class="btn" type="button" value="Prihlásiť" onClick="checkAccess()">      
+      </div> <!-- End Box -->      
+      </form>      
+    </div>
+    
+    
+    <!--====================================================================================
+    Tab Call-Page   
+    =====================================================================================-->
+    <div id='tabCallPage' class="tabcontent1">
+      
+     <fieldset id='fieldset1'>
+        <br><select type="text3" id="txtMesto">          
+          <option value="BB">Banská Bystrica</option>
+          <option value="BA">Bratislava</option>
+          <option value="DT">Detva</option>
+          <option value="MT">Martin</option>
+          <option value="NT">Nitra</option>
+          <option value="PD">Prievidza</option>
+          <option value="ZA">Žilina</option>
+          <option value="ZH">Žiar nad Hronom</option>
+          <option value="ZV">Zvolen</option>
+        </select>
+        <select type="text3" id="txtMestoNK" style="display:none;">
+          <option value="BA">Bratislava</option>
+          <option value="BB">Banská Bystrica</option>  
+          <option value="ZH">Žiar nad Hronom</option>
+          <option value="ZV">Zvolen</option>
+        </select>
+        <select type="text4" id="selectDataSource" onchange="dataChangeSelectCP()">
+          <option value="CP">Call-Page</option>
+          <option value="NK">Nepriradené kontakty</option>
+        </select>  
+        <br><input id="btnLoadNewKontakt" class="buttonCP" type="button" value="Nový kontakt" onClick="btnPrijatKontakt()" accesskey="q" disabled="true"><input id="btngenTable" class="buttonCP" type="button" value="Odoslať" onClick="btnSendData()" accesskey="w"disabled="true"><input id="btnSearch" class="buttonCP" type="button" value="Vyhľadať" onClick="btnVyhladajKontakt()" accesskey="" disabled="true"><input id="btnAddContact" class="buttonCP" type="button" value="Pridať" onClick="btnAccessPridatKontakt()" accesskey="" disabled="true" style="display:none;"><input id="btnStatistika" class="buttonCP" type="button" value="Štatistika" onClick="showStatistic()" accesskey="r" disabled="true">  
+        <br><input name="txtMenoKlienta" type="text2" value="" id="txtMenoKlienta" onClick="copyName()" placeholder="Meno"  style="background-color: #f2f2f2;" readonly="true"/><input name="pocetKontaktov" type="text3" value="0" id="pocetKontaktov" placeholder="Počet kontaktov"  style="background-color: #f2f2f2;" readonly="true"/> 
+        <br><input name="txtCisloKlienta" type="text2" value="" id="txtCisloKlienta" onClick="copyMobil()" placeholder="Telefonné číslo" style="background-color: #f2f2f2;" readonly="true"/><input name="idRow" type="text3" value="" id="idRow" placeholder="ID" style="background-color: #f2f2f2;" readonly="true"/>
+        <div id="idPoslednyKontakt" style="display:none"><font id="idDatumPoslednehoTelefontu">...</font>, <font id="idMenoVolajuceho">...</font>, <font id="idVysledokTelefonatu">...</font></div>
+        <select type="text2" id="txtCallStat1" onchange="">
+          <option value="-">-</option>
+          <option value="vyzváňal">1. vyzváňal</option>
+          <option value="nedostupný">2. nedostupný</option>
+          <option value="číslo neexistuje">3. číslo neexistuje</option>
+          <option value="nemá záujem">4. nemá záujem</option>
+          <option value="nemá záujem - starobný dôchodca">5. nemá záujem - starobný dôchodca</option>
+          <option value="kontaktovať inokedy - CallPage">6. kontaktovať inokedy (Call-Page)</option>
+          <option value="kontaktovať inokedy">7. kontaktovať inokedy (Databáza)</option>          
+          <option value="dohodnuté stretnutie">8. dohodnuté stretnutie (Databáza)</option>
+          <option value="klient">9. klient</option>
+          <option value="nekontaktovať">10. nekontaktovať</option>
+        </select><input id="date" type="date"><input id="time" type="time" style="display:none">
+        <input name="txtProdukty" class="yellow" type="text" value="" id="txtProdukty" placeholder="Produkty"/>
+        <input name="txtDatumNarodenia" class="yellow" type="text" value="" id="txtDatumNarodenia" placeholder="Dátum narodenia"/>
+        <textarea name="comment" id="txtPoznamka" placeholder="Poznámka" rows="6"></textarea>          
+        <?!= include('DataList'); ?>
+        <br><input id="elektronickyKontakt" class="yellow" type="text" placeholder="Email">
+        <br><input id="mestoSkratka" class="yellow" type="text" style="display:none">
+        </fieldset>        
+        
+        <?!= include('Panels'); ?>
+        
+        <div class="centerLeft">
+        <br><input id="btnPopPlusCP" type="button" class="button4" value="+" onclick="popUpShowAddCP()" font-size="32" disabled="true">
+        <input id="btnPopRefreshCP" type="button" class="button4" value="R" onclick="refreshCallPage()" font-size="32" disabled="true">        
+        <br><table id="table" class="display" cellspacing="0" width="100%" text-align="left" onClick="selectedRowToInput()">
+        <thead>
+        <tr>        
+            <th onclick="sortTable(0, 'table')">ID</th>
+            <th onclick="sortTable(1, 'table')">...</th>
+            <th align="left" onclick="sortTable(2, 'table')">Meno</th>
+            <th align="left" onclick="sortTable(3, 'table')">Číslo</th>
+            <th align="left" onclick="sortTable(4, 'table')">Výsledok</th>
+            <th align="left" onclick="sortTable(5, 'table')">Poznámka</th>
+            <th align="left" onclick="sortTable(6, 'table')">Dátum a čas</th>
+            <th align="left" onclick="sortTable(7, 'table')">...</th>
+            <th align="left" onclick="sortTable(8, 'table')">...</th>
+            <th align="left" onclick="sortTable(9, 'table')">...</th>
+            <th align="left" onclick="sortTable(10, 'table')">...</th>
+            <th align="left" onclick="sortTable(11, 'table')">...</th>
+            <th align="left" onclick="sortTable(12, 'table')">...</th>
+        </tr>
+        </thead>
+      </table>
+      </div> <!-- !!!!!!! /div centerLeft !!!!!!!! --> 
+      
+      
+      <br><input type="button" value="." onClick="btnVyzvana()" accesskey="+" style="display:none;">
+      <input type="button" value="." onClick="btnNedostupny()" accesskey="ľ" style="display:none;">
+      <input type="button" value="." onClick="btnCisloNeexistuje()" accesskey="š" style="display:none;">
+      <input type="button" value="." onClick="btnNemazaujem()" accesskey="č" style="display:none;">
+      <input type="button" value="." onClick="btnNemazaujemSD()" accesskey="ť" style="display:none;">
+      <input type="button" value="." onClick="btnKontaktovatInokedy()" accesskey="ž" style="display:none;">
+      <input type="button" value="." onClick="btnDohodnuteStretnutie()" accesskey="ý" style="display:none;">
+      <input type="button" value="." onClick="btnKlient()" accesskey="á" style="display:none;">
+      <input type="button" value="." onClick="btnNekontaktovat()" accesskey="í" style="display:none;">
+      <input type="button" value="." onClick="btnSearchFocus()" accesskey="a" style="display:none;"> 
+      
+
+
+
+      <!-- Trigger/Open The Modal -->
+      <button id="myBtn2" style="display:none">Open Modal2</button>
+      
+      <!-- The Modal -->
+      <div id="myModal2" class="modal2">
+      
+      <!-- Modal content -->
+      <div class="modal-content2">
+      <span class="close2" style="display:block" accesskey="">&times;</span>
+      
+      
+      
+      
+      <fieldset class="fieldsetLeft">
+      
+      <font class="popText">Databáza</font><br>
+      <select id="popDatSelect" type="text5" disabled="true" onchange="dataChangeSelect()">
+          <option value="CP">Call-Page</option>
+          <option value="NK">Nepriradené kontakty</option>
+      </select>
+      
+      <font class="popText">Okres</font><br>
+      <select id="popOkresSkratka" type="text5" disabled="true">          
+          <option value="BB">Banská Bystrica</option>
+          <option value="BA">Bratislava</option>
+          <option value="DT">Detva</option>
+          <option value="MT">Martin</option>
+          <option value="NT">Nitra</option>
+          <option value="PD">Prievidza</option>
+          <option value="ZA">Žilina</option>
+          <option value="ZH">Žiar nad Hronom</option>
+          <option value="ZV">Zvolen</option>
+      </select>
+      
+      <font class="popText">Priezvisko a meno</font><br>
+      <input id="popCallMeno" type="text5"><br>
+      
+      <font class="popText">Mobil</font><br>
+      <input id="popCallMobil" type="text5"><br>
+      
+      <font id = "popDatNarodeniaFont" class="popText" style="display:none">Dátum narodenia</font>
+      <input id="popDatNarodenia" type="text5" style="display:none">     
+      
+      <font id="popCalVysledokFont" class="popText">Výsledok telefonátu</font>
+      <select type="text5" id="popCalVysledok" onchange="">
+          <option value="-">-</option>
+          <option value="vyzváňal">1. vyzváňal</option>
+          <option value="nedostupný">2. nedostupný</option>
+          <option value="číslo neexistuje">3. číslo neexistuje</option>
+          <option value="nemá záujem">4. nemá záujem</option>
+          <option value="nemá záujem - starobný dôchodca">5. nemá záujem - starobný dôchodca</option>
+          <option value="kontaktovať inokedy - CallPage">6. kontaktovať inokedy (Call-Page)</option>
+          <option value="kontaktovať inokedy">7. kontaktovať inokedy (Databáza)</option>          
+          <option value="dohodnuté stretnutie">8. dohodnuté stretnutie (Databáza)</option>
+          <option value="klient">9. klient</option>
+          <option value="nekontaktovať">10. nekontaktovať</option>
+      </select>
+      
+      <font id="popCallDateTimeFont" class="popText">Dátum</font>
+      <input id="popCallDateTime" type="date"> 
+      
+      <font class="popText">Email</font><br>
+      <input id="popCallEmail" type="text5" value="">      
+      
+      <font class="popText">Zarobková činnosť - Špecifikácia</font><br>
+      <input id="popCallZarobkovaCinnostSpec" type="text5" value="">
+      
+      <font class="popText">Zarobková činnosť - Oblasť</font><br>
+      <input id="popCallZarobkovaCinnostOblast" type="text5" value="">
+      
+      <font class="popText">ID</font><br>
+      <input type="text5" id="popCallIdRow"/>
+      
+      
+      <input id="btnDohodyAddCP" type="button" class="btnRight1" value="Pridať" onclick="addContactNK()">
+      <input id="btnSendCP" type="button" class="btnRight2" value="Uložiť zmenu" onclick="btnSendDataPop()"> 
+      <input id="btnNedvihaCP" type="button" class="btnRight3" value="Nedvíha / Nedostupný" onclick="btnPopNedvihaOdoslatKontakt()">
+           
+      
+      </fieldset> <!-- fieldsetLeft -->
+      
+      
+      <fieldset class="fieldsetRight">
+      
+      <font class="popText">Produkty</font><br>
+      <input id="popCallProdukty" type="text6" value=""><br>
+      
+      <font class="popText">Poznámka</font><br>
+      <textarea id="popCallPoznamka" class="popPoznamkaCallPage" rows="17"></textarea>
+      
+      
+      </fieldset> <!-- fieldsetRight -->
+      
+      
+      </div> <!-- Modal content2 -->
+      </div> <!-- The Modal2 -->
+    
+    </div> <!-- !!!!!!! /tabCallPage !!!!!!!! --> 
+   
+   
+   
+   
+   <!--====================================================================================
+   Tab SZCO   
+   =====================================================================================-->
+    <div id='tabPoSzco' class="tabcontent1">
+    
+      <fieldset id='fieldset1'>
+      
+          <p>
+            <input id="" class="button" type="button" value="Nový kontakt" onClick="firmyGetKontaktIndex()">
+            <input id="" class="button" type="button" value="Odoslať" onClick="btnOdoslatKontaktSzco()">
+            <br>
+            <select type="text2" id="txtCallStat2" onchange="">
+            <option value="-">-</option>
+            <option value="preskočiť">1. preskočiť</option>
+            <option value="vyzváňal">2. vyzváňal</option>
+            <option value="nedostupný">3. nedostupný</option>
+            <option value="číslo neexistuje">4. číslo neexistuje</option>
+            <option value="nemá záujem">5. nemá záujem</option>
+            <option value="kontaktovať inokedy">6. kontaktovať inokedy</option>          
+            <option value="dohodnuté stretnutie">7. dohodnuté stretnutie</option>
+            <option value="klient">8. klient</option>
+            <option value="nekontaktovať">9. nekontaktovať</option>
+            </select><input id="fDate" type="date">            
+            <textarea name="comment" id="fPoznamka" placeholder="Poznámka" rows="4"></textarea>
+            <br><input id="fEmail" type="text" placeholder="Email">
+          </p>
+          
+          <p>
+          <b><label id="fName"></label></b>
+          <br><label id="fKategoria"></label>
+          <br><a href="" target="_blank" id="fFinstat"></a>
+          </p>
+          
+          <p>
+          <b>Kontakt:</b>
+          <br><label id="fCislo"></label> 
+          <br><a href="" target="_blank" id="fWeb"></a>
+          </p>
+          <p>
+          <b>Info:</b>
+          <br><label id="fInfo"></label>
+          </p>
+          <label id="fIndex" style="display:none"></label>
+      
+
+      </fieldset>
+      
+      <?!= include('Panels firmy'); ?>      
+
+      <div class="scrollTable">
+        <table id="pDataTableSzco" text-align="left" onclick="showPopUpFirmy()">   
+     
+        <tr> 
+          <th onclick="sortTable(0, 'pDataTableSzco')">ID</th>
+          <th onclick="sortTable(1, 'pDataTableSzco')">...</th>
+          <th align="left" onclick="sortTable(2, 'pDataTableSzco')">Meno</th>
+          <th align="left" onclick="sortTable(3, 'pDataTableSzco')">Číslo</th>
+          <th align="left" onclick="sortTable(4, 'pDataTableSzco')">Email</th>
+          <th align="left" onclick="sortTable(5, 'pDataTableSzco')">Web</th>
+          <th align="left" onclick="sortTable(6, 'pDataTableSzco')">Finstat</th>
+          <th align="left" onclick="sortTable(7, 'pDataTableSzco')">Kategória</th>
+          <th align="left" onclick="sortTable(8, 'pDataTableSzco')">Výsledok</th>
+          <th align="left" onclick="sortTable(9, 'pDataTableSzco')">Dátum</th>
+          <th align="left" onclick="sortTable(10, 'pDataTableSzco')">Poznámka</th>
+          <th align="left" onclick="sortTable(11, 'pDataTableSzco')">Info</th>
+        </tr> 
+
+        </table>        
+      </div>
+      
+      
+      <!-- Trigger/Open The Modal -->
+      <button id="myBtn5" style="display:none">Open Modal5</button>
+      
+      <!-- The Modal -->
+      <div id="myModal5" class="modal5">
+      
+      <!-- Modal content -->
+      <div class="modal-content5">  
+      <span class="close5" style="display:block" accesskey="">&times;</span> 
+      
+      <input type="button" class="btnRight2" value="Uložiť zmenu" onclick=""> 
+      <input type="button" class="btnRight3" value="Nedvíha / Nedostupný" onclick="">
+      
+        <p>
+         <select type="text2" id="popTxtCallStat2" onchange="">
+            <option value="-">-</option>
+            <option value="preskočiť">1. preskočiť</option>
+            <option value="vyzváňal">2. vyzváňal</option>
+            <option value="nedostupný">3. nedostupný</option>
+            <option value="číslo neexistuje">4. číslo neexistuje</option>
+            <option value="nemá záujem">5. nemá záujem</option>
+            <option value="kontaktovať inokedy">6. kontaktovať inokedy</option>          
+            <option value="dohodnuté stretnutie">7. dohodnuté stretnutie</option>
+            <option value="klient">8. klient</option>
+            <option value="nekontaktovať">9. nekontaktovať</option>
+            </select><input id="popfDate" type="date" class="popDateFirmy">            
+            <textarea name="comment" id="popfPoznamka" placeholder="Poznámka" rows="4"></textarea>
+            <br><input id="popfEmail" type="text" placeholder="Email">
+          </p>
+          
+          <p>
+          <b><label id="popfName"></label></b>
+          <br><label id="popfKategoria"></label>
+          <br><a href="" target="_blank" id="popfFinstat"></a>
+          </p>
+          
+          <p>
+          <b>Kontakt:</b>
+          <br><label id="popfCislo"></label> 
+          <br><a href="" target="_blank" id="popfWeb"></a>
+          </p>
+          <p>
+          <b>Info:</b>
+          <br><label id="popfInfo"></label>
+          </p>
+          <label id="popfIndex" style="display:none"></label>
+
+      
+      </div> <!-- Modal content5 -->
+      </div> <!-- The Modal5 -->
+    
+    </div> <!-- end SZCO -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+   <!--====================================================================================
+   Tab IK, dohody
+   =====================================================================================-->
+    <div id='tabIK' class="tabcontent1">
+    
+      <br><input id="btnPopIkPlus" type="button" class="button4" value="+" onclick="showPopUpIKadd()" font-size="32">
+      <input id="btnPopIkRefresh" type="button" class="button4" value="R" onclick="refreshDataIK()" font-size="32"> 
+      
+      <table id="pTableIK" class="display" cellspacing="0" text-align="left" onclick="showPopUpIK()">   
+     
+        <tr> 
+          <th align="left" onclick="sortTable(0, 'pTableIK')">Dátum</th>
+          <th align="left" onclick="sortTable(1, 'pTableIK')">Meno</th>
+          <th align="left" onclick="sortTable(2, 'pTableIK')">Stav</th>
+          <th align="left" onclick="sortTable(3, 'pTableIK')">Výsledok</th>
+          <th align="left" onclick="sortTable(4, 'pTableIK')">Poznámka</th>
+          <th align="left" onclick="sortTable(5, 'pTableIK')">...</th>
+        </tr> 
+
+        </table>
+      
+      <!-- Trigger/Open The Modal -->
+      <button id="myBtn6" style="display:none">Open Modal6</button>
+      
+      <!-- The Modal -->
+      <div id="myModal6" class="modal6">
+      
+      <!-- Modal content -->
+      <div class="modal-content6">  
+      <span class="close6" style="display:block" accesskey="">&times;</span> 
+      
+      <input id="btnAddIk" type="button" class="btnRight1" value="Pridať" onclick="addIkData()">
+      <input id="btnSaveIk" type="button" class="btnRight2" value="Uložiť" onclick="saveDataIK()">
+      <input id="btnSendZapisIk" type="button" class="btnRight3" value="Odoslať zápis z IK" onclick="sendZapisIK()">
+      <input id="btnDeleteIK" type="button" class="btnLeftTop" value="Vymazať" onclick="deleteIK()">      
+     
+      <hr>
+      
+      <font class="popText" style="display:block">Dátum IK</font>
+      <input id="popIkDate" type="date"><br>
+      
+      <font class="popText" style="display:block">Meno</font>
+      <input id="popIkMeno" type="text5" list="listMena"><br>
+      <datalist id="listMena">
+        <option value="Badinka Peter"></option>
+        <option value="Janov Patrik"></option>
+        <option value="Dzurendová Dominika"></option>
+        <option value="Baláž Vladimír"></option>
+        <option value="Chlebničan Peter"></option>
+        <option value="Bosák Rastislav"></option>
+        <option value="Hohn Daniel"></option>
+      </datalist>      
+      
+      <font class="popText">Email</font><br>
+      
+      <input id="popIkEmail" type="text5" list="listEmaily">
+      <datalist id="listEmaily">
+        <option value="peter.badinka44@gmail.com"></option>
+        <option value="janov.patrik@gmail.com"></option>
+        <option value="dominikadzurendova@gmail.com"></option>
+        <option value="balaz.vladimir931@gmail.com"></option>
+        <option value="peterchlebnican9@gmail.com"></option>
+        <option value="rasto.bosak123@gmail.com"></option>
+        <option value="hohndano@gmail.com"></option>
+      </datalist> 
+      
+      <div id="divDohody" style="display:none"> 
+      
+        <h3>Dohody</h3>
+        
+        <input type="button" class="button4" value="+" onclick="showPopUpDohodyAdd()" font-size="32">
+        <input type="button" class="button4" value="R" onclick="refreshDataDohody()" font-size="32"> 
+        
+        <table id="pTableDohody" text-align="left" onclick="showPopUpDohody()">   
+        
+        <tr> 
+          <th align="left" onclick="sortTable(0, 'pTableDohody')">Dátum</th>
+          <th align="left" onclick="sortTable(1, 'pTableDohody')">Dohoda</th>
+          <th align="left" onclick="sortTable(2, 'pTableDohody')">Výsledok</th>
+          <th align="left" onclick="sortTable(3, 'pTableDohody')">Info</th>
+          <th align="left" onclick="sortTable(4, 'pTableDohody')">...</th>
+        </tr> 
+        
+        </table>
+      
+      </div> <!-- End dohody -->
+   
+      <br><font class="popText">Poznámka</font><br>      
+      <textarea id="popIkPoznamka" class="popPoznamkaIK" type="text5" rows="3"></textarea><br>
+      
+      <font class="popText">Výsledok</font><br>      
+      <input id="ikVysledok" type="text5"><br>
+      
+      <font class="popText">Stav</font><br>      
+      <input id="ikStav" type="text5"><br>
+      
+      <input id="ikIDTemp" type="text5" style="display:none"><br>
+      
+      </div> <!-- Modal content6 -->
+      </div> <!-- The Modal6 -->      
+      
+      
+      <!-- Trigger/Open The Modal -->
+      <button id="myBtn7" style="display:none">Open Modal7</button>
+      
+      <!-- The Modal -->
+      <div id="myModal7" class="modal7">
+      
+      <!-- Modal content -->
+      <div class="modal-content7">
+      <span class="close7" style="display:block" accesskey="">&times;</span>  
+      
+        <input id="btnDohodyAdd" type="button" class="btnRight1" value="Pridať" onclick="addDataDohoda()">
+        <input id="btnDohodySave" type="button" class="btnRight2" value="Uložiť" onclick="saveDataDohody()">
+        <input id="btnDeleteDohoda" type="button" class="btnLeftTop" value="Vymazať" onclick="deleteDohoda()">
+      
+        <font class="popText">Dátum začiatok</font><br>      
+        <input id="dohodaDateStart" type="date"><br>
+        
+        <font class="popText">Dátum koniec</font><br>      
+        <input id="dohodaDateEnd" type="date"><br>
+        
+        <font class="popText">Dohoda</font><br>      
+        <textarea id="dohodaPoznamka" class="zmlPoznamka" type="text6" rows="5"></textarea><br>
+        
+        <font class="popText">Dohoda bola splnena?</font><br>      
+        <input id="dohodaVysledok" type="text5"><br>
+
+        <font class="popText">Info</font><br>      
+        <textarea id="dohodaInfo" class="popPoznamkaIK" type="text6" rows="5"></textarea><br>
+        
+        <input id="dohodaIDTemp" type="text5" style="display:none"><br>
+        
+      
+      </div> <!-- Modal content7 -->
+      </div> <!-- The Modal7 --> 
+    
+    </div> <!-- end tabIK -->
+   
+   
+   
+   
+   
+   
+   
+   
+   <!--====================================================================================
+   Tab Databáza(zakladné menu)...
+   =====================================================================================-->
+    <div id='tabData' class="tabcontent1">    
+    
+    <div id='pDataDiv' style="display:block">      
+      
+      <br><input id="btnPopPlus" type="button" class="button4" value="+" onclick="popUpShowAdd()" font-size="32" disabled="true">
+      <input id="btnPopRefresh" type="button" class="button4" value="R" onclick="refreshData()" font-size="32" disabled="true">       
+
+      <input id="myCheck" type="checkbox" value="" onclick="reloadPoznamku()"> Zobraziť poznámku
+      
+      <table id="pDataTable" class="display" cellspacing="0" text-align="left" onclick="popUpShow()">   
+      <thead>      
+      <tr> 
+      <th onclick="sortTable(0, 'pDataTable')">Dátum</th>
+      <th onclick="sortTable(1, 'pDataTable')">...</th>
+      <th onclick="sortTable(2, 'pDataTable')">Meno</th>
+      <th onclick="sortTable(3, 'pDataTable')">Číslo</th>
+      <th onclick="sortTable(4, 'pDataTable')">Dátum</th>
+      <th onclick="sortTable(5, 'pDataTable')">Stav</th>
+      <th onclick="sortTable(6, 'pDataTable')">Poznámka</th>
+      <th onclick="sortTable(7, 'pDataTable')">...</th>
+      </tr> 
+      </thead> 
+      </table>      
+      
+      <!-- Trigger/Open The Modal -->
+      <button id="myBtn" style="display:none">Open Modal</button>
+      
+      <!-- The Modal -->
+      <div id="myModal" class="modal">
+      
+      <!-- Modal content -->
+      <div class="modal-content">
+      <span class="close" style="display:block" accesskey="">&times;</span>
+      
+      <input id="btnPopSave" type="button" class="btnRight2" value="Uložiť" onclick="saveData()"> 
+      <input id="btnPopAdd" type="button" class="btnRight1" value="Pridať" onclick="addContact()"> 
+      <input id="btnPopNedostupny" type="button" class="btnRight3" value="Neúspešný kontakt" onclick="saveDataNedviha()"> 
+      <input id="btnDeleteDatabaza" type="button" class="btnLeftTop" value="Vymazať" onclick="deleteDat()">
+
+    <!-- Menu v popUp okne -->
+
+    <div class="tab">
+      <button class="tablinks2" onclick="openCity2(event, 'popZakladneUdaje')" id="defaultOpen2">Údaje</button>   
+      <button id="btnTabTexty" class="tablinks2" onclick="openCity2(event, 'popCallScript')" style="display:none;">Texty</button>
+      <button id="btnTabZmluvy" class="tablinks2" onclick="openCity2(event, 'popZmluvy')" style="display:none;">Zmluvy</button>
+      <button id="btnTabIneOsoby" class="tablinks2" onclick="openCity2(event, 'popIneOsoby')" style="display:none;">Iné osoby</button>     
+    </div>
+    
+    <br><br>
+    <div id="popZakladneUdaje" class="tabcontent2">     
+
+      <hr>
+
+      <fieldset class="fieldsetLeft">
+      
+      <font class="popText">Priezvisko a meno</font><br>
+      <input id="popMeno" type="text5"><br>
+      
+      <font class="popText">Mobil</font><br>
+      <input id="popMobil" type="text5"><br>
+      
+      <font class="popText">E-mail</font><br>
+      <input id="popEmail" type="text5"><br>
+      
+      <font class="popText">Dátum najbližšieho telefonátu / stretnutia</font><br>
+      <input id="popNajblizsiTelefonat" type="date"><br>
+      
+      <font class="popText">Stav</font><br>
+      <select id="popStav" type="text5"><br>
+      <option value=""></option>
+      <option value="1. Dohodni">1. Dohodni</option>
+      <option value="2. Termín (48h)">2. Termín (48h)</option>
+      <option value="3. Predstavenie (48h)">3. Predstavenie (48h)</option>
+      <option value="3. Predstavenie + dokumenty (48h)">3. Predstavenie + dokumenty (48h)</option>
+      <option value="3. Predstavenie + dokumenty + doplní ďalšie (48h)">3. Predstavenie + dokumenty + doplní ďalšie (48h)</option>
+      <option value="4. Poradenstvo (48h)">4. Poradenstvo (48h)</option>
+      <option value="5. Podpis (24h)">5. Podpis (24h)</option>
+      <option value="5. Poradenstvo + podpis (48h)">5. Poradenstvo + podpis (48h)</option>
+      <option value="6. Trvalý príkaz - Doklad (24h)">6. Trvalý príkaz - Doklad (24h)</option>
+      <option value="7. Odoslať súpisku (24h)">7. Odoslať súpisku (24h)</option>
+      <option value="8. Informuj klienta o stave (12h) - OK">8. Informuj klienta o stave (12h) - OK</option>
+      <option value="8. Informuj klienta o stave (12h) - Intervencia">8. Informuj klienta o stave (12h) - Intervencia</option>
+      <option value="9. Prever platbu / stav zmluvy">9. Prever platbu / stav zmluvy</option>
+      <option value="10. Zložka klienta (víkend)">10. Zložka klienta (víkend)</option>
+      <option value="11. Tel. zmluva toma?">11. Tel. zmluva toma?</option>
+      <option value="12. Tel. objednaj servis (48h)">12. Tel. objednaj servis (48h)</option>
+      <option value="13. Doplň odporúčania">13. Doplň odporúčania</option>
+      <option value="14. Servis, odovzdám šanón + portfólio klienta, poznačím VD">14. Servis, odovzdám šanón + portfólio klienta, poznačím VD</option>
+      <option value="14. Skontrolujem či má klient uložené moje číslo">14. Skontrolujem či má klient uložené moje číslo</option>
+      <option value="15. Servis po roku">15. Servis po roku</option>   
+      </select><br>
+      
+      <font class="popText">Pobočka / Okres</font><br>
+      <input id="popPobocka" type="text5"><br>
+      
+      <font class="popText">Typ odporúčania, oslovenie</font><br>
+      <input id="popTypOdporucania" type="text5"><br>
+      
+      <font class="popText">Povolanie</font><br>
+      <input id="popPovolanie" type="text5"><br>
+      
+      </fieldset>      
+      
+      <fieldset class="fieldsetRight">
+      
+      <font class="popText">Poznámka</font><br>
+      <textarea id="popPoznamka" class="popPoznamka" type="text5" rows="13"></textarea><br>
+      
+      </fieldset>
+
+     <hr>
+     <h3>Osobné informácie</h3> 
+     
+     <fieldset class="fieldsetLeft">
+      
+      <font class="popText">Ulica, súpisné/orientačné číslo</font><br>
+      <input id="popUlica" type="text5"><br>
+      
+      <font class="popText">PSC obec</font>
+      <?!= include('Obec, PSC'); ?> <br>      
+      
+      <font class="popText">Rodné číslo</font><br>
+      <input id="popRodneCislo" type="text5" onchange="validateRC()"><br>
+      
+      <font class="popText">Dátum narodenia</font><br>
+      <input id="popDatumNarodenia" type="text5"><br>
+      
+      <font class="popText">Číslo OP</font><br>
+      <input id="popCisloOP" type="text5"><br>
+      
+      <font class="popText">Platnosť dokladu od</font><br>
+      <input id="popPlatnostOd" type="date" onchange="datePlus20r()"><br>
+      
+      <font class="popText">Platnosť dokladu do</font><br>
+      <input id="popPlatnostDo" type="date"><br>
+      
+      <font class="popText">Doklad vydal (mesto)</font><br>
+      <input id="popDokladVydal" type="text5"><br>
+      
+      <font class="popText">Číslo účtu</font>
+      <input id="popCisloUctu" type="text5" onchange="validateIban()"><br>
+      
+      </fieldset>
+      
+      <fieldset class="fieldsetRight">
+      <font class="popText">Zamestnávateľ</font><br>
+      <input id="popZamestnavatel" type="text5"><br>
+      
+      
+      <font class="popText">Príjmy</font><br>
+      <input id="popPrijmy" type="number"><br>
+      
+      <font class="popText">Výdavky</font><br>
+      <input id="popVydavky" type="number"><br>
+      
+      <font class="popText">Miesto narodenia</font><br>
+      <input id="popMiestoNarodenia" type="text5"><br>
+      
+      <font class="popText">Obvodný lekár - Meno</font><br>
+      <input id="popLekarMeno" type="text5"><br>
+      
+      <font class="popText">Obvodný lekár - Adresa</font><br>
+      <input id="popLekarAdresa" type="text5"><br>
+      
+      <font class="popText">Obvodný lekár - Kontakt</font><br>
+      <input id="popLekarKontakt" type="text5"><br>
+      
+      <font class="popText">Výška (cm)</font><br>
+      <input id="popVyska" type="text5"><br>
+      
+      <font class="popText">Váha (kg)</font><br>
+      <input id="popVaha" type="text5"><br>
+      
+      </fieldset> 
+     
+     <br><br> 
+     
+     <div id="io_zmluvy">
+     
+     <hr>
+     
+     <h3>Zmluvy</h3> 
+     
+     <input type="button" class="button4" value="+" font-size="32" onclick="popUpShowZmluvyAdd()">
+      <input type="button" class="button4" value="R" font-size="32" onclick="refreshTableZmluvy2()">
+       <table id="pZmluvyTable" class="display" cellspacing="0" width="100%" text-align="left" onclick="popUpShowZmluvy()">
+         <thead>
+           <tr> 
+             <th onclick="sortTable(0, 'pZmluvyTable')">Dátum</th>
+             <th onclick="sortTable(1, 'pZmluvyTable')">Spoločnosť</th>
+             <th onclick="sortTable(2, 'pZmluvyTable')">Produkt</th>
+             <th onclick="sortTable(3, 'pZmluvyTable')">Číslo zmluvy</th>
+             <th onclick="sortTable(4, 'pZmluvyTable')">Stav</th>
+             <th onclick="sortTable(5, 'pZmluvyTable')">...</th>
+           </tr> 
+         </thead>
+       </table>
+     
+     <hr>
+     
+     <h3>Iné osoby</h3> 
+     
+      <input type="button" class="button4" value="+" font-size="32" onclick="popUpShowIneOsobyAdd()">
+      <input type="button" class="button4" value="R" font-size="32" onclick="refreshTableIO2()">
+       <table id="tableIneOsoby" class="display" cellspacing="0" width="100%" text-align="left" onclick="popUpShowIO()">
+         <thead>
+           <tr> 
+             <th onclick="sortTable(0, 'tableIneOsoby')">Vzťah</th>
+             <th onclick="sortTable(1, 'tableIneOsoby')">Meno</th>
+             <th onclick="sortTable(2, 'tableIneOsoby')">Číslo</th>
+             <th onclick="sortTable(3, 'tableIneOsoby')">Dátum</th>
+             <th onclick="sortTable(4, 'tableIneOsoby')">Stav</th>
+             <th onclick="sortTable(5, 'tableIneOsoby')">...</th>
+           </tr> 
+         </thead>
+       </table>
+     
+     </div>      
+     
+     <hr>
+     
+     <h3>Servis</h3>
+     
+     <fieldset class="fieldsetLeft">
+      
+      <font class="popText">Oslovenie</font><br>
+      <input id="serOslovenie" type="text6" list="listOslovenie"><br>
+      
+      <font class="popText">Priezvisko</font><br>
+      <input id="serPriezvisko" type="text6"><br>
+      
+      <font class="popText">Krstné meno</font><br>
+      <input id="serMeno" type="text6" list="dataKrstneMena"><br>
+      
+      <font class="popText">Narodeniny a meniny</font><br>
+      <input id="serMeniny" type="text6" list="listAno"><br>
+      
+      <font class="popText">Interval servisných mailov</font><br>
+      <input id="serServisInterval" type="number" class="numberServis" min="60" max="360" step="30"><br>
+      
+      <font class="popText">Android Sync</font><br>
+      <input id="serAndroidSync" type="text6" list="listAndroidSync"><br>        
+      <datalist id="listAndroidSync">
+        <option value="KL">
+        <option value="KL - Uložený v telefóne">
+      </datalist>
+      
+     </fieldset>
+    
+    </div><!-- /popZakladneUdaje -->
+      
+      <!-- Trigger/Open The Modal -->
+      <button id="myBtn3" style="display:none">Open Modal3</button>
+      
+      <!-- The Modal -->
+      <div id="myModal3" class="modal3">
+      
+      <!-- Modal content -->
+      <div class="modal-content3">
+      <span class="close3" style="display:block" accesskey="">&times;</span>       
+      
+      <?!= include('Zmluvy'); ?>      
+      
+      </div> <!-- Modal content3 -->
+      </div> <!-- The Modal3 -->
+      
+      
+      
+      
+      <!-- Trigger/Open The Modal -->
+      <button id="myBtn4" style="display:none">Open Modal4</button>
+      
+      <!-- The Modal -->
+      <div id="myModal4" class="modal4">
+      
+      <!-- Modal content -->
+      <div class="modal-content4">  
+      <span class="close4" style="display:block" accesskey="">&times;</span>
+
+      <input id="btnPopAddIO" type="button" class="btnRight1" value="Pridať" onclick="addInaOsoba()" style="display:none;">
+      <input id="btnPopSaveIO" type="button" class="btnRight2" value="Uložiť" onclick="saveDataIO()" style="display:none;">
+      <input id="btnPopNedostupnyIO" type="button" class="btnRight3" value="Neúspešný kontakt" onclick="saveDataNedvihaIO()" style="display:none;">
+      <input id="btnDuplikovatIO" type="button" class="btnRight1" value="Duplikovať" onclick="addInaOsoba()" style="display:none;">
+      <input id="btnPopMoveToDat" type="button" class="btnLeft1" value="Pridať do databázy" onclick="addToDat()" style="display:none;">
+      <input id="btnDeleteIO" type="button" class="btnLeftDown" value="Vymazať" onclick="deleteIO()">
+             
+      
+      <?!= include('IneOsoby'); ?>      
+      
+      </div> <!-- Modal content4 -->
+      </div> <!-- The Modal4 -->
+      
+      
+      
+      
+      
+      
+      <div id="popCallScript" class="tabcontent2"> 
+          
+          <hr>
+            <h3>Databáza</h3>
+            <p>Kr&aacute;sny deň prajem pán/i <i><u><b id="popMenoKlienta1">........</b></u></i>, pri telef&oacute;ne <i><u><b id="popMenoVolajuceho">........</b></u></i>, počujeme sa?</p>
+            <p>Vol&aacute;m V&aacute;m ako sme sa dohodli, rozpr&aacute;vali sme sa o možnostiach</p>
+            <p>&nbsp;-&nbsp;<strong>zn&iacute;ženia spl&aacute;tky a &uacute;rokovej sadzby na Va&scaron;ej &uacute;verovej zmluve</strong><br>
+            &nbsp;<strong>- zn&iacute;ženia platby na Va&scaron;om životnom a &uacute;razovom poisten&iacute;</strong><br>
+            <strong>&nbsp;- vyššieho zhodnotenia Va&scaron;ich finančn&yacute;ch prostriedkov</strong></p>
+            <p>spom&iacute;nate si?</p>
+            <p>Sľ&uacute;bili sme si, že sa V&aacute;m ozvem dnes a&nbsp;že sa dohodneme na konkr&eacute;tnom term&iacute;ne stretnutia, nakoľko je t&aacute;to možnosť časovo limitovan&aacute;. &nbsp;</p>
+          <hr>
+   
+            <h3>Servis</h3>
+            <p>             
+              Dobrý deň pán/i <i><u><b id="popMenoKlienta2">........</b></u></i>, som rád že som sa Vám dovolal, počujeme sa?       
+            </p>
+            <p>             
+              Pán/i <i><u><b id="popMenoKlienta3">........</b></u></i> volám Vám, pretože sa chcem uistiť ohľadom zmluvy, ktorú sme uzatvárali, čí nenastala nejaká poistná udalosť alebo zmena v osobných údajoch. Je niečo, čo by ste potrebovali nahlásiť do inštitúcie, s čím by som Vám vedel pomôcť?      
+            </p>
+            <p>
+              V poriadku, v prípade akýchkoľvek zmien ma prosím kontaktujte, máte na mňa uložené toto telefónne číslo, pán/i <i><u><b id="popMenoKlienta4">........</b></u></i>?       
+            </p>
+            <p>
+              Výborne. V súčasnosti s klientmi vzhľadom na aktuálnu situáciu na trhu denne riešime otázky ohľadom úverov a hypoték, kde sa od 1.7. chystajú výrazné zmeny. Je táto téma aj pre Vás aktuálna?
+            </p>
+            <p>
+              <b>Ak áno:</b> Rád Vám osobne vysvetlím, aký dopad budú mať tieto zmeny na Vašu rodinu. Vieme sa dohodnúť na stretnutí napríklad zajtra popoludní, aby sme to nenechávali na poslednú chvíľu? Mne by vyhovovalo stretnutie napríklad zajtra o 17:30, je to stretnutie v tomto čase reálne aj z Vašej strany?
+            </p>
+            <p>
+              <b>Ak nie:</b> Rozumiem, vzhľadom na to, že sa blíži obdobie dovoleniek, plánujete s rodinou dovolenku na toto leto?
+            </p>
+            <p>
+              <b>Ak áno:</b> Rád Vám pomôžem vybrať komplexné cestovné poistenie za výhodnú cenu so všetkým, čo potrebuje Vaša rodina. Vieme sa dohodnúť na stretnutí napríklad zajtra popoludní, aby sme to nenechávali na poslednú chvíľu? Mne by vyhovovalo stretnutie napríklad zajtra o 17:30, je to stretnutie v tomto čase reálne aj z Vašej strany?
+            </p>
+            <p>
+              <b>Ak nie:</b> Rozumiem, pán/i <i><u><b id="popMenoKlienta5">........</b></u></i>, čiže v súčasnosti máte všetko v poriadku, keď budete Vy alebo niekto z Vášho okolia potrebovať s niečím pomôcť kľudne ma kontaktujte. Vieme sa tak dohodnúť?
+            </p>
+            <p>
+              Sme dohodnutí, teším sa na spoluprácu v budúcnosti.
+            </p>
+            <p>
+              Prajem Vám pekný deň. Dopočutia.
+            </p>            
+          <hr>
+
+            <h3>Termín</h3>
+            <p>            
+              Rád Vám pomôžem, ako aj stovkám mojich klientov, ktorých mám na starosti....
+            </p>
+            <p>            
+              Dávalo by Vám zmysel, keby sme sa spoločne na bezplatnej konzultácií trvajúcej maximálne 10 minút
+              pozreli na Vašu aktuálnu situáciu a zároveň našli riešenie?
+            </p>
+            <p>            
+              Pri pohľade do môjho diára viem, že mám voľný termín napríklad zajtra o 10:00, prípadne ešte dnes o 17tej hodine.
+            </p>
+              
+            <p>Ktorý termín je pre Vás lepší?</p> 
+        <hr>  
+            <h3>Adresa</h3>
+            <p>
+              Pán/i <i><u><b id="popMenoKlienta6">........</b></u></i>, ste priamo zo Zvolena? 
+            </p> 
+            <p>My sídlime vo Zvolene na Masarykovej ulici oproti zámku - v budove Vzoru, medzi kaviarňou Brick Café (bývalý Paríž) a pracovnými odevami je podchod do dvora, vo dvore je záhradkárstvo a rybárstvo, naša kancelária je na 2.poschodí.</p>
+            <p>
+              Viete presne kde sa naša kancelária nachádza podľa tohto popisu?
+            </p>             
+        <hr>  
+            <h3>Dokumenty</h3>
+            <p>Potrebné je si so sebou priniesť všetky zmluvy, aby sme mali možnosť objektívne skontrolovať nastavenie Vašich zmlúv.</p>
+            <p>            
+              Takže dovoľte mi to zhrnúť, dohodli sme sa že sa stretneme .............(čas a miesto stretnutia) 
+            </p> 
+           <p>
+              Máte možnosť si poznačiť termín teraz zároveň so mnou do diára?
+            </p>
+        <hr>
+            <h3>Kontrola</h3>          
+            <p>Termín mám poznačený, stihli ste si ho zapísať aj vy?</p>
+            <p>Dovoľte, aby som Vám nadiktoval moje súkromné číslo, aby ste sa mi vedeli dovolať, ak by sa Vám niečo zmenilo, prípadne ak by ste nás nevedeli nájsť.</p>
+            <p>Môžem diktovať to číslo?</p>
+        <hr>
+            <h3>Over číslo</h3>
+            <p>Super, číslo máte poznačené, viete mi ho prosím zopakovať, nech mám istotu, že ho máte poznačené správne?</p> 
+        <hr>
+        
+            <h3>Záver</h3>                    
+            <p>Termín stretnutia a všetky potrebné údaje máme obaja poznačené, v prípade zmeny mi prosím vopred korektne zavolajte, vieme sa takto dohodnúť?</p>
+            <p>Teším sa na stretnutie, pán/i <i><u><b id="popMenoKlienta7">........</b></u></i> prajem pekný deň, dopočutia.</p>        
+        <hr>
+        
+ 
+  
+      </div> <!-- /popCallScript -->      
+    </div> <!-- Modal content -->
+    </div> <!-- /modalComent -->
+    </div> <!-- /myModal -->
+      
+      
+    </div> <!-- !!!!!!!! /tabData !!!!!!!! -->
+    
+      
+      
+      
+      
+   <!--====================================================================================
+   Tab Aktivity 
+   =====================================================================================-->
+     <div id='tabAktivity' class="tabcontent1">
+      
+     <br>
+     <fieldset id="fieldset3">
+            <fieldset id="fieldsetAktivity1">
+              <p>
+                <font class="popText">Počet oslovených potenciálnych klientov</font><br>
+                <input id="numOslovenyKlienti" type="number" min="0" value="0"><br>
+                <font class="popText">Register</font><br>
+                <input id="numRegister" type="number" min="0" value="0"><br>
+                <font class="popText">Termíny</font><br>
+                <input id="numTerminy" type="number" min="0" value="0"><br>
+                <font class="popText">Predstavenie</font><br>
+                <input id="numPredstavenie" type="number" min="0" value="0"><br>
+                <font class="popText">Analýza</font><br>
+                <input id="numAnalyza" type="number" min="0" value="0"><br>
+                <font class="popText">Predaj</font><br>
+                <input id="numPredaj" type="number" min="0" value="0"><br>
+                <font class="popText">Podpis</font><br>
+                <input id="numPodpis" type="number" min="0" value="0"><br>
+                <font class="popText">Servis</font><br>
+                <input id="numServis" type="number" min="0" value="0"><br>
+                <font class="popText">Odporúčania</font><br>
+                <input id="numOdporucania" type="number" min="0" value="0"><br>
+                <font class="popText">Body</font><br>
+                <input id="numBody" type="number" step="5" min="0" value="0"><br>
+              </p>
+            </fieldset>
+            <fieldset id="fieldsetAktivity2">
+              <p>
+                <font class="popText">PZP a Havarijné poistenie</font><br>
+                <input id="numPzpHp" type="number" min="0" value="0"><br>
+                <font class="popText">Poistenie majetku</font><br>
+                <input id="numPoistenieMajetku" type="number" min="0" value="0"><br>
+                <font class="popText">Poistenie osob</font><br>
+                <input id="numPoistenieOsob" type="number" min="0" value="0"><br>
+                <font class="popText">Hypotéka</font><br>
+                <input id="numHypoteka" type="number" min="0" value="0"><br>
+                <font class="popText">Úver</font><br>
+                <input id="numUver" type="number" min="0" value="0"><br>
+                <font class="popText">Investícia</font><br>
+                <input id="numInvesticie" type="number" min="0" value="0"><br>
+                <font class="popText">Druhý pilier</font><br>
+                <input id="numDruhyPilier" type="number" min="0" value="0"><br>
+                <font class="popText">Tretí pilier</font><br>
+                <input id="numTretiPilier" type="number" min="0" value="0"><br>
+                <font class="popText">Iné (zodpovednosť, bežný účet, ..)</font><br>
+                <input id="numIne" type="number" min="0" value="0"><br>                
+              </p>
+              <p><input type="button" class="button2" value="Odoslať" onclick="setAktivity()"></p>
+            </fieldset>
+      </fieldset>
+      
+      <a href="https://sites.google.com/a/financnypomocnik.sk/vzdelavanie/dokumenty/spolupracovnik/pobockove-vysledky" target="_blank">Zobraziť aktivity</a>
+      
+     </div> <!-- !!!!!!!! /aktivity !!!!!!!! --> 
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     <!--====================================================================================
+     Tab Odkazy 
+     =====================================================================================-->
+     <div id='tabOdkazy' class="tabcontent1">
+       <br>
+       <fieldset>
+         <a href="https://docs.google.com/spreadsheets/d/10TY7F_MSV1VZOKrsoa5ZP4JEtou5FWVun8HWJ4rkB_4/edit#gid=0" target="_blank">Porovnávač bánk</a>
+         <br><a href="https://docs.google.com/spreadsheets/d/1z_YsdQzKQuqw-6nk-z8uYln_hiMgOy54MafMvyORNYU/edit?ts=5a4be843#gid=0" target="_blank">Sieť kontaktov banky a poisťovne</a>
+         <br><a href="https://docs.google.com/spreadsheets/d/18B65fgu2EQ0Yd0hDZjqaMVhvIVhVdfgzdbNcIhYfbOc/edit#gid=0" target="_blank">Pomôcka pre dosahovanie nadpriemerných výsledkov (Fincentrum Zvolen)</a>
+         
+         
+         <br><br><a href="https://sites.google.com/a/financnypomocnik.sk/vzdelavanie/dokumenty" target="_blank">Dokumenty pre spolupracovníka</a>
+         <br><a href="https://docs.google.com/spreadsheets/d/1lz8heVcnznB2figXhU1MzE0kdDerJfjSYWDRMuvqB-s/edit#gid=38479357" target="_blank">Workshop - spätná väzba</a>         
+         <br><a href="https://docs.google.com/spreadsheets/d/1PD3vndlvN8TW0HrNwpT313y8YwZg4-xpAO_JD6LQNT0/edit#gid=0" target="_blank">Príspevky za využivanie kancelárií, pokuty</a>
+         <br><a href="https://docs.google.com/spreadsheets/d/1Dtmb7T0vF94ROixdoVGk_o81bb8_qKZghJPhUpsIsB4/edit?pli=1#gid=0" target="_blank">Rozpis služieb</a>
+         
+         <br><br><a href="https://www.financnypomocnik.sk/n%C3%A1stroje/investor" target="_blank">Investor</a>
+         <br><a href="https://www.financnypomocnik.sk/n%C3%A1stroje/iban-kalkula%C4%8Dka" target="_blank">IBAN Kalkulačka</a>
+         
+         <br><br><a href="https://docs.google.com/spreadsheets/d/118S7PqWJdL_RNGN0SXgHF6CoLG0ABSDKwyR8JGsbpQ8/edit?pli=1#gid=45414608" target="_blank">Dotazníky</a>
+         <br><a href="https://docs.google.com/spreadsheets/d/1anOfRjI3QivEcMpq7zk0uqgbde_lBUK5rq2OWOan_Ak/edit#gid=1595525522" target="_blank">Access - Users</a>
+
+       </fieldset>
+     </div> <!-- !!!!!!!! /odkazy !!!!!!!! -->
+     
+     
+     
+     
+     
+     <font id="versionProject" class="versionInfo"></font>
+
+      
+      
+      <font class="popText" style="display:none">Dátum prvého telefonátu / záznamu</font><br>
+      <input id="popDatePT" type="date" readOnly = "true" style="display:none"><br>
+      
+      <font class="popText" style="display:none">Dátum posledného telefonátu</font><br>
+      <input id="popDatumTelefonatu" type="date" style="display:none"><br>
+      
+      <font class="popText" style="display:none">Získateľ</font><br> 
+      <input id="popZiskatel" type="text5" readOnly = "true" style="display:none"><br>
+      
+      <font class="popText" style="display:none">Status</font><br>
+      <input id="popStatus" type="text5" style="display:none"><br>
+      
+      <input id="idPersonSelect" type="text5"  style="display:none"><br>
+    
+      
+    </body>
+    
+     <?!= include('JavaScript'); ?>
+     <?!= include('fJS'); ?>
+    
+    
+</html>
